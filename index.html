@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" defer src="./script.js"></script>
+    <link href="./output.css" rel="stylesheet" />
+    <title>Document</title>
+  </head>
+  <body class="m-0 w-screen h-screen">
+    <div
+      class="w-1/4 h-5/6 absolute flex flex-col items-center top-1/2 left-8 transform -translate-y-1/2 bg-slate-800/85 z-10 p-8 rounded-2xl shadow-xl"
+    >
+      <img src="./img/logo_globe.png" alt="logo" class="w-1/4 pb-6 m-0" />
+      <ul class="trips w-11/12 text-slate-200 p-4">
+        <form
+          class="form hidden w-full bg-gray-600/50 rounded-md mb-2 p-3 font-sans text-lg text-slate-200"
+        >
+          <div class="form__row text-center pb-2">
+            <label class="form__label tracking-wide pr-4">Name</label>
+            <input
+              type="text"
+              class="form__input form__input--name bg-gray-500/50 w-1/2 rounded-md outline-none pl-3"
+            />
+          </div>
+          <div class="form__row text-center pb-2 justify-evenly flex">
+            <label class="form__label tracking-wide">Type</label>
+            <select
+              class="form__input form__input--type bg-gray-500/50 focus:bg-gray-500 w-1/3 rounded-md outline-none"
+            >
+              <option value="flight">Flight</option>
+              <option value="car">Car</option>
+              <option value="cycling">Cycling</option>
+              <option value="hike">Hike</option>
+            </select>
+
+            <label class="form__label">Date</label>
+            <input
+              class="form__input form__input--date bg-gray-500/50 focus:bg-gray-500 w-1/3 rounded-md outline-none pl-2"
+              type="date"
+            />
+          </div>
+          <div class="form__row text-center pb-2 justify-evenly flex">
+            <label class="form__label">Duration</label>
+            <input
+              class="form__input form__input--duration w-1/6 bg-gray-500/50 rounded-md outline-none pl-3"
+              placeholder="days"
+            />
+            <label class="form__label">Distance</label>
+            <input
+              class="form__input form__input--distance w-1/6 bg-gray-500/50 rounded-md outline-none pl-3"
+              placeholder="km"
+            />
+          </div>
+          <div class="form__row pb-2 text-center justify-center flex">
+            <label class="form__label">Photos</label>
+            <input
+              class="form__input form__input--photos w-5/6 text-base file:text-base file:text-slate-200 file:bg-gray-500/50 file:outline-none file:border-none file:rounded-md file:hover:bg-gray-700/50 file:hover:cursor-pointer"
+              type="file"
+              accept="image/png, image/jpeg"
+              multiple="true"
+            />
+          </div>
+          <div class="flex text-center justify-center">
+            <button
+              class="form__btn bg-gray-500/50 w-1/4 hover:bg-gray-700/50 hover:cursor-pointer"
+            >
+              OK
+            </button>
+          </div>
+        </form>
+        <!-- <li
+          data-id="123"
+          class="bg-gray-800/80 rounded-md p-2 border-l-4 border-green-500 mb-2"
+        >
+          <h2>Hike on 12.03.2022</h2>
+          <h3>Hike name here</h3>
+          <div class="trip__details">
+            <span class="trip__icon">👟</span>
+            <span class="trip__value">12000</span>
+            <span class="trip__unit">steps</span>
+          </div>
+          <div class="workout__details">
+            <span class="workout__icon">⏱</span>
+            <span class="workout__value">24</span>
+            <span class="workout__unit">min</span>
+          </div>
+          <div class="trip__details">
+            <span class="trip__icon">⚡</span>
+            <span class="trip__value">50</span>
+            <span class="trip__unit">steps/min</span>
+          </div>
+        </li> -->
+        <!-- <li
+          data-id="123"
+          class="bg-gray-800/80 rounded-md p-2 border-l-4 border-blue-500 mb-2"
+        >
+          <h2>Hike on 12.03.2022</h2>
+          <h3>Hike name here</h3>
+          <div class="flex flex-row">
+            <div class="trip__details pr-8">
+              <span class="trip__icon">🚲</span>
+              <span class="trip__value">12000</span>
+              <span class="trip__unit">km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⏱</span>
+              <span class="workout__value">24</span>
+              <span class="workout__unit">min</span>
+            </div>
+          </div>
+          <div class="trip__details">
+            <span class="trip__icon">⚡</span>
+            <span class="trip__value">50</span>
+            <span class="trip__unit">steps/min</span>
+          </div>
+        </li> -->
+        <!-- <li
+          data-id="123"
+          class="bg-gray-800/80 rounded-md p-2 border-l-4 border-teal-500 mb-2"
+        >
+          <h2>Hike on 12.03.2022</h2>
+          <h3>Hike name here</h3>
+          <div class="flex flex-row">
+            <div class="trip__details pr-8">
+              <span class="trip__icon">🚗</span>
+              <span class="trip__value">12000</span>
+              <span class="trip__unit">km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⏱</span>
+              <span class="workout__value">24</span>
+              <span class="workout__unit">min</span>
+            </div>
+          </div>
+          <div class="trip__details">
+            <span class="trip__icon">⚡</span>
+            <span class="trip__value">50</span>
+            <span class="trip__unit">steps/min</span>
+          </div>
+        </li> -->
+      </ul>
+    </div>
+    <div class="mapWrapper h-screen w-screen z-0 absolute">
+      <div id="map" class="h-full w-full z-0"></div>
+    </div>
+  </body>
+</html>

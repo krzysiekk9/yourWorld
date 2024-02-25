@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "parcel": "^2.11.0",
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "jsvectormap": "^1.5.3",
+    "leaflet": "^1.9.4",
+    "path": "^0.12.7"
+  },
+  "scripts": {
+    "cleanup": "rm -rf .parcel-cache dist",
+    "dev": "npm run cleanup && parcel ./index.html"
+  }
+}
