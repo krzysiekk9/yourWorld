@@ -26,6 +26,16 @@ const inputDate = document.querySelector(".form__input--date");
 const inputDuration = document.querySelector(".form__input--duration");
 const inputDistance = document.querySelector(".form__input--distance");
 const inputFiles = document.querySelector(".form__input--photos");
+const formElevationGain = document.querySelector(".form__elevation-gain");
+const inputElevationGain = document.querySelector(
+  ".form__input--elevation-gain"
+);
+const formAvgFuelConsumption = document.querySelector(
+  ".form__average-fuel-consumption"
+);
+const inputAvgFuelConsumption = document.querySelector(
+  ".form__input--average-fuel-consumption"
+);
 
 class Trip {
   constructor(name, coords, date, duration) {
@@ -41,34 +51,56 @@ class Trip {
 
 class Hike extends Trip {
   typeOfTrip = "hike";
-  constructor(name, coords, date, duration, distance) {
+  constructor(name, coords, date, duration, stepsNum) {
     super(name, coords, date, duration);
     this._setDescription();
-    this.distance = distance;
-    this.calcPace();
+    this.stepsNum = stepsNum;
+    this.peace = this.calcPace();
   }
   calcPace() {
-    this.peace = 2; //this.stepsNum / duration;
-    return this.peace;
+    return Math.round((+this.stepsNum / +this.duration) * 10) / 10;
   }
 }
 
 class Cycling extends Trip {
   typeOfTrip = "cycling";
-  constructor(name, coords, date, duration, elevationGain) {
+  constructor(name, coords, date, duration, distance, elevationGain) {
     super(name, coords, date, duration);
+    this.distance = distance;
     this.elevationGain = elevationGain;
     this._setDescription();
+    this.speed = this.calcSpeed();
+  }
+  calcSpeed() {
+    return Math.round((+this.distance / +this.duration) * 100) / 100;
   }
 }
 
 class Car extends Trip {
   typeOfTrip = "car";
-  constructor(name, coords, date, duration, drivenDistance, gasPrice) {
+  constructor(
+    name,
+    coords,
+    date,
+    duration,
+    drivenDistance,
+    gasPrice,
+    avgFuelConsumption
+  ) {
     super(name, coords, date, duration);
     this.drivenDistance = drivenDistance;
     this.gasPrice = gasPrice;
+    this.avgFuelConsumption = avgFuelConsumption;
     this._setDescription();
+  }
+  calcCost() {
+    return (
+      Math.round(
+        ((+this.drivenDistance * +this.avgFuelConsumption) / 100) *
+          this.gasPrice *
+          100
+      ) / 100
+    );
   }
 }
 
@@ -134,6 +166,29 @@ class App {
       icon: this.#markerIcon,
     }).addTo(this.#map);
     this._showForm();
+    this._onTripTypeChange();
+  }
+
+  _onTripTypeChange() {
+    inputType.addEventListener("change", (e) => {
+      let option = e.target.value;
+      console.log("option", option);
+      if (option === "hike") {
+        inputDistance.placeholder = "steps";
+        inputDuration.placeholder = "min";
+        formElevationGain.classList.add("hidden");
+      }
+      if (option === "cycling") {
+        inputDuration.placeholder = "min";
+        inputDistance.placeholder = "km";
+        formElevationGain.classList.remove("hidden");
+      }
+      if (option === "car") {
+        inputDuration.placeholder = "h";
+        inputDistance.placeholder = "km";
+        formAvgFuelConsumption.classList.remove("hidden");
+      }
+    });
   }
 
   _onFormSubmition() {
@@ -163,16 +218,17 @@ class App {
             2
           );
           break;
-        case "cycling":
+        case "cycling": //name, coords, date, duration, distance, elevationGain
           this.#newTrip = new Cycling(
             inputName.value,
             this.#coords,
             inputDate.value,
             inputDuration.value,
-            inputDistance.value
+            inputDistance.value,
+            inputElevationGain.value
           );
           break;
-        case "hike":
+        case "hike": //name, coords, date, duration, stepsNum
           this.#newTrip = new Hike(
             inputName.value,
             this.#coords,
@@ -197,34 +253,42 @@ class App {
   }) => {
     let html;
     if (typeOfTrip === "hike") {
+      console.log("rest", rest);
       html = `
           <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-green-500 mb-2">
-            <h2>${name}</h2>
-            <h3>Hike on ${date}</h3>
-            <div class="trip__details">
-              <span class="trip__icon">👟</span>
-              <span class="trip__value">${distance}</span>
-              <span class="trip__unit">km</span>
+            <div class="flex flex-row">
+              <h2 class="pr-1">${name}</h2>
+              <h3>on ${date}</h3>
             </div>
-            <div class="workout__details">
-              <span class="workout__icon">⏱</span>
-              <span class="workout__value">${duration}</span>
-              <span class="workout__unit">min</span>
+            <div class="flex flex-row justify-around">
+              <div class="trip__details pr-3">
+                <span class="trip__icon">👟</span>
+                <span class="trip__value">${rest.stepsNum}</span>
+                <span class="trip__unit">steps</span>
+              </div>
+              <div class="workout__details">
+                <span class="workout__icon">⏱</span>
+                <span class="workout__value">${duration}</span>
+                <span class="workout__unit">min</span>
+              </div>
             </div>
-            <div class="trip__details">
-              <span class="trip__icon">⚡</span>
-              <span class="trip__value">50</span>
+            <div class="trip__details flex justify-center">
+              <span class="trip__icon pr-1">⚡</span>
+              <span class="trip__value pr-1">${rest.peace}</span>
               <span class="trip__unit">steps/min</span>
             </div>
           </li>
     `;
     }
     if (typeOfTrip === "cycling") {
+      console.log("rest", rest);
       html = `
       <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-blue-500 mb-2">
-        <h2>${name}</h2>
-        <h3>Hike on ${date}</h3>
         <div class="flex flex-row">
+          <h2 class="pr-1">${name}</h2>
+          <h3> on ${date}</h3>
+        </div>
+          <div class="flex flex-row justify-around">
           <div class="trip__details pr-8">
             <span class="trip__icon">🚲</span>
             <span class="trip__value">${distance}</span>
@@ -233,13 +297,20 @@ class App {
           <div class="workout__details">
             <span class="workout__icon">⏱</span>
             <span class="workout__value">${duration}</span>
-            <span class="workout__unit">h</span>
+            <span class="workout__unit">min</span>
           </div>
         </div>
-        <div class="trip__details">
-          <span class="trip__icon">⚡</span>
-          <span class="trip__value">50</span>
-          <span class="trip__unit">steps/min</span>
+        <div class="flex flex-row justify-around">
+          <div class="trip__details">
+            <span class="trip__icon">⚡</span>
+            <span class="trip__value">${rest.speed}</span>
+            <span class="trip__unit pr-2">km/min</span>
+          </div>
+          <div class="trip__details">
+            <span class="trip__icon">⛰️</span>
+            <span class="trip__value pr-1">${rest.elevationGain}</span>
+            <span class="trip__unit">meters</span>
+          </div>
         </div>
       </li>
       `;

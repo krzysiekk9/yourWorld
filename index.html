@@ -9,10 +9,10 @@
   </head>
   <body class="m-0 w-screen h-screen">
     <div
-      class="w-1/4 h-5/6 absolute flex flex-col items-center top-1/2 left-8 transform -translate-y-1/2 bg-slate-800/85 z-10 p-8 rounded-2xl shadow-xl"
+      class="w-1/4 h-5/6 absolute flex flex-col items-center top-1/2 left-8 transform -translate-y-1/2 bg-slate-800/85 z-10 px-2 pt-8 pb-2 rounded-2xl shadow-xl"
     >
       <img src="./img/logo_globe.png" alt="logo" class="w-1/4 pb-6 m-0" />
-      <ul class="trips w-11/12 text-slate-200 p-4">
+      <ul class="trips w-full text-slate-200 p-2">
         <form
           class="form hidden w-full bg-gray-600/50 rounded-md mb-2 p-3 font-sans text-lg text-slate-200"
         >
@@ -43,13 +43,27 @@
           <div class="form__row text-center pb-2 justify-evenly flex">
             <label class="form__label">Duration</label>
             <input
-              class="form__input form__input--duration w-1/6 bg-gray-500/50 rounded-md outline-none pl-3"
+              class="form__input form__input--duration w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="days"
             />
             <label class="form__label">Distance</label>
             <input
-              class="form__input form__input--distance w-1/6 bg-gray-500/50 rounded-md outline-none pl-3"
+              class="form__input form__input--distance w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="km"
+            />
+          </div>
+          <div class="form__elevation-gain hidden pb-2 text-center">
+            <label class="form__label">Elevation Gain</label>
+            <input
+              class="form__input form__input--elevation-gain w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
+              placeholder="m"
+            />
+          </div>
+          <div class="form__average-fuel-consumption hidden pb-2 text-center">
+            <label class="form__label">Average fuel consumption</label>
+            <input
+              class="form__input form__input--average-fuel-consumption w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
+              placeholder="liters"
             />
           </div>
           <div class="form__row pb-2 text-center justify-center flex">
