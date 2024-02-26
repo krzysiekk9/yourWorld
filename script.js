@@ -30,9 +30,8 @@ const formElevationGain = document.querySelector(".form__elevation-gain");
 const inputElevationGain = document.querySelector(
   ".form__input--elevation-gain"
 );
-const formAvgFuelConsumption = document.querySelector(
-  ".form__average-fuel-consumption"
-);
+const formFuel = document.querySelector(".form__fuel");
+const inputFuelCost = document.querySelector(".form__input--fuel-cost");
 const inputAvgFuelConsumption = document.querySelector(
   ".form__input--average-fuel-consumption"
 );
@@ -83,20 +82,21 @@ class Car extends Trip {
     coords,
     date,
     duration,
-    drivenDistance,
+    distance,
     gasPrice,
     avgFuelConsumption
   ) {
     super(name, coords, date, duration);
-    this.drivenDistance = drivenDistance;
+    this.distance = distance;
     this.gasPrice = gasPrice;
     this.avgFuelConsumption = avgFuelConsumption;
     this._setDescription();
+    this.tripCost = this.calcCost();
   }
   calcCost() {
     return (
       Math.round(
-        ((+this.drivenDistance * +this.avgFuelConsumption) / 100) *
+        ((+this.distance * +this.avgFuelConsumption) / 100) *
           this.gasPrice *
           100
       ) / 100
@@ -186,7 +186,7 @@ class App {
       if (option === "car") {
         inputDuration.placeholder = "h";
         inputDistance.placeholder = "km";
-        formAvgFuelConsumption.classList.remove("hidden");
+        formFuel.classList.remove("hidden");
       }
     });
   }
@@ -209,13 +209,20 @@ class App {
           );
           break;
         case "car":
-          this.#newTrip = new Car( //name, coords, date, duration, drivenDistance, gasPric
+          this.#newTrip = new Car( //name, coords, date, duration, drivenDistance, gasPric name,
+            // coords,
+            // date,
+            // duration,
+            // drivenDistance,
+            // gasPrice,
+            // avgFuelConsumption
             inputName.value,
             this.#coords,
             inputDate.value,
             inputDuration.value,
             inputDistance.value,
-            2
+            inputFuelCost.value,
+            inputAvgFuelConsumption.value
           );
           break;
         case "cycling": //name, coords, date, duration, distance, elevationGain
@@ -251,7 +258,7 @@ class App {
     typeOfTrip,
     ...rest
   }) => {
-    let html;
+    let html = ``;
     if (typeOfTrip === "hike") {
       console.log("rest", rest);
       html = `
@@ -271,12 +278,12 @@ class App {
                 <span class="workout__value">${duration}</span>
                 <span class="workout__unit">min</span>
               </div>
-            </div>
-            <div class="trip__details flex justify-center">
-              <span class="trip__icon pr-1">⚡</span>
-              <span class="trip__value pr-1">${rest.peace}</span>
-              <span class="trip__unit">steps/min</span>
-            </div>
+                <div class="trip__details flex justify-center">
+                <span class="trip__icon pr-1">⚡</span>
+                <span class="trip__value pr-1">${rest.peace}</span>
+                <span class="trip__unit">steps/min</span>
+                </div>
+              </div>
           </li>
     `;
     }
@@ -319,25 +326,27 @@ class App {
       console.log("caar");
       html = `
         <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-pink-500 mb-2">
-          <h2>${name}</h2>
-          <h3>Hike on ${date}</h3>
-          <div class="flex flex-row">
+        <div class="flex flex-row">
+            <h2 class="pr-1">${name}</h2>
+            <h3> on ${date}</h3>
+          </div>
+          <div class="flex flex-row justify-evenly">
             <div class="trip__details pr-8">
               <span class="trip__icon">🚗</span>
-              <span class="trip__value">12000</span>
+              <span class="trip__value">${distance}</span>
               <span class="trip__unit">km</span>
             </div>
             <div class="workout__details">
               <span class="workout__icon">⏱</span>
-              <span class="workout__value">24</span>
-              <span class="workout__unit">min</span>
+              <span class="workout__value">${duration}</span>
+              <span class="workout__unit">h</span>
             </div>
-          </div>
-          <div class="trip__details">
-            <span class="trip__icon">⚡</span>
-            <span class="trip__value">50</span>
-            <span class="trip__unit">steps/min</span>
-          </div>
+              <div class="trip__details">
+              <span class="trip__icon">💰</span>
+              <span class="trip__value">${rest.tripCost}</span>
+              <span class="trip__unit">$</span>
+              </div>
+            </div>
         </li>
         `;
     }
