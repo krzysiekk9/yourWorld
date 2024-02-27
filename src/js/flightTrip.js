@@ -2,10 +2,6 @@ import Trip from "./Trip.js";
 
 class Flight extends Trip {
   typeOfTrip = "flight";
-  //   constructor(name, coords, date, duration, ticketCost) {
-  //     super(name, coords, date, duration);
-  //     this.ticketCost = ticketCost;
-  //   }
 
   _generateMarkup() {
     return `

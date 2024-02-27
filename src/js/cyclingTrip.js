@@ -2,13 +2,7 @@ import Trip from "./Trip.js";
 
 class Cycling extends Trip {
   typeOfTrip = "cycling";
-  //   constructor(name, coords, date, duration, distance, elevationGain) {
-  //     super(name, coords, date, duration);
-  //     this.distance = distance;
-  //     this.elevationGain = elevationGain;
-  //     this._setDescription();
-  //     this.speed = this.calcSpeed();
-  //   }
+
   calcSpeed() {
     return Math.round((+this.distance / +this.duration) * 100) / 100;
   }

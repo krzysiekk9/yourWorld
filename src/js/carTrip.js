@@ -2,22 +2,7 @@ import Trip from "./Trip.js";
 
 class Car extends Trip {
   typeOfTrip = "car";
-  // constructor(
-  //   name,
-  //   coords,
-  //   date,
-  //   duration,
-  //   distance,
-  //   gasPrice,
-  //   avgFuelConsumption
-  // ) {
-  //   super(name, coords, date, duration);
-  //   this.distance = distance;
-  //   this.gasPrice = gasPrice;
-  //   this.avgFuelConsumption = avgFuelConsumption;
-  //   this._setDescription();
-  //   this.tripCost = this.calcCost();
-  // }
+
   calcCost() {
     return (
       Math.round(

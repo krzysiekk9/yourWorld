@@ -19,11 +19,10 @@ import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 
-import hike from "./src/js/hikeTrip";
+import hikeTrip from "./src/js/hikeTrip";
 import cyclingTrip from "./src/js/cyclingTrip";
 import carTrip from "./src/js/carTrip";
 import flightTrip from "./src/js/flightTrip";
-import hikeTrip from "./src/js/hikeTrip";
 
 const form = document.querySelector(".form");
 const inputName = document.querySelector(".form__input--name");
@@ -44,89 +43,10 @@ const inputAvgFuelConsumption = document.querySelector(
 const formTicketCost = document.querySelector(".form__ticket-cost");
 const inputTicketCost = document.querySelector(".form__input--ticket-cost");
 
-// class Trip {
-//   constructor(name, coords, date, duration) {
-//     this.name = name;
-//     this.coords = coords;
-//     this.date = date;
-//     this.duration = duration;
-//   }
-//   _setDescription() {
-//     this.description = console.log("description", this.date);
-//   }
-// }
-
-// class Hike extends Trip {
-//   typeOfTrip = "hike";
-//   constructor(name, coords, date, duration, stepsNum) {
-//     super(name, coords, date, duration);
-//     this._setDescription();
-//     this.stepsNum = stepsNum;
-//     this.peace = this.calcPace();
-//   }
-//   calcPace() {
-//     return Math.round((+this.stepsNum / +this.duration) * 10) / 10;
-//   }
-// }
-
-// class Cycling extends Trip {
-//   typeOfTrip = "cycling";
-//   constructor(name, coords, date, duration, distance, elevationGain) {
-//     super(name, coords, date, duration);
-//     this.distance = distance;
-//     this.elevationGain = elevationGain;
-//     this._setDescription();
-//     this.speed = this.calcSpeed();
-//   }
-//   calcSpeed() {
-//     return Math.round((+this.distance / +this.duration) * 100) / 100;
-//   }
-// }
-
-// class Car extends Trip {
-//   typeOfTrip = "car";
-//   constructor(
-//     name,
-//     coords,
-//     date,
-//     duration,
-//     distance,
-//     gasPrice,
-//     avgFuelConsumption
-//   ) {
-//     super(name, coords, date, duration);
-//     this.distance = distance;
-//     this.gasPrice = gasPrice;
-//     this.avgFuelConsumption = avgFuelConsumption;
-//     this._setDescription();
-//     this.tripCost = this.calcCost();
-//   }
-//   calcCost() {
-//     return (
-//       Math.round(
-//         ((+this.distance * +this.avgFuelConsumption) / 100) *
-//           this.gasPrice *
-//           100
-//       ) / 100
-//     );
-//   }
-// }
-
-// class Flight extends Trip {
-//   typeOfTrip = "flight";
-//   constructor(name, coords, date, duration, ticketCost) {
-//     super(name, coords, date, duration);
-//     this.ticketCost = ticketCost;
-//   }
-// }
-
 class App {
   #map;
   #mapZoom = 10;
   #trips = [];
-  #newTrip;
-  #coords = [];
-  typeOfTrip = "";
   #markerIcon = L.icon({
     iconUrl: "./img/location-pin.png",
   });
@@ -191,23 +111,23 @@ class App {
 
   _onTripTypeChange() {
     inputType.addEventListener("change", (e) => {
-      let option = e.target.value;
+      this.tripDetails.tripType = e.target.value;
       this._hideUnnecessaryFields();
-      if (option === "hike") {
+      if (this.tripDetails.tripType === "hike") {
         inputDistance.placeholder = "steps";
         inputDuration.placeholder = "min";
       }
-      if (option === "cycling") {
+      if (this.tripDetails.tripType === "cycling") {
         inputDuration.placeholder = "min";
         inputDistance.placeholder = "km";
         formElevationGain.classList.remove("hidden");
       }
-      if (option === "car") {
+      if (this.tripDetails.tripType === "car") {
         inputDuration.placeholder = "h";
         inputDistance.placeholder = "km";
         formFuel.classList.remove("hidden");
       }
-      if (option === "flight") {
+      if (this.tripDetails.tripType === "flight") {
         inputDistance.placeholder = "km";
         inputDuration.placeholder = "days";
         formTicketCost.classList.remove("hidden");
@@ -224,7 +144,7 @@ class App {
   _onFormSubmition() {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      console.log("type", inputType.value);
+
       this.tripDetails = {
         name: inputName.value,
         date: inputDate.value,
@@ -234,195 +154,25 @@ class App {
         fuelCost: inputFuelCost.value,
         avgFuelConsumption: inputAvgFuelConsumption.value,
         ticketCost: inputTicketCost.value,
+        tripType: inputType.value,
       };
-      console.log("1", this.tripDetails);
 
-      switch (inputType.value) {
+      switch (this.tripDetails.tripType) {
         case "flight":
-          // console.log("aaa"); //name, coords, date, duration, ticketCost
-          // console.log(inputTicketCost.value);
-          // this.#newTrip = new Flight(
-          //   inputName.value,
-          //   this.#coords,
-          //   inputDate.value,
-          //   inputDuration.value,
-          //   inputDistance.value,
-          //   inputTicketCost.value
-          // );
           flightTrip.render(this.tripDetails);
           break;
         case "car":
-          // this.#newTrip = new Car( //name, coords, date, duration, drivenDistance, gasPric name,
-          //   // coords,
-          //   // date,
-          //   // duration,
-          //   // drivenDistance,
-          //   // gasPrice,
-          //   // avgFuelConsumption
-          //   // inputName.value,
-          //   // this.#coords,
-          //   // inputDate.value,
-          //   // inputDuration.value,
-          //   // inputDistance.value,
-          //   // inputFuelCost.value,
-          //   // inputAvgFuelConsumption.value
-          // );
           carTrip.render(this.tripDetails);
           break;
-        case "cycling": //name, coords, date, duration, distance, elevationGain
+        case "cycling":
           cyclingTrip.render(this.tripDetails);
           break;
-        case "hike": //name, coords, date, duration, stepsNum
-          // this.#newTrip = new Hike(
-          //   inputName.value,
-          //   this.#coords,
-          //   inputDate.value,
-          //   inputDuration.value,
-          //   inputDistance.value
-          // );
+        case "hike":
           hikeTrip.render(this.tripDetails);
           break;
       }
-      // this._renderTrip(this.tripDetails);
       this._hideForm();
     });
   }
-
-  _renderTrip = ({
-    name,
-    coords,
-    date,
-    duration,
-    distance,
-    typeOfTrip,
-    ...rest
-  }) => {
-    let html = ``;
-    if (typeOfTrip === "hike") {
-      console.log("rest", rest);
-      html = `
-          <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-green-500 mb-2">
-            <div class="flex flex-row">
-              <h2 class="pr-1">${name}</h2>
-              <h3>on ${date}</h3>
-            </div>
-            <div class="flex flex-row justify-around">
-              <div class="trip__details pr-3">
-                <span class="trip__icon">👟</span>
-                <span class="trip__value">${rest.stepsNum}</span>
-                <span class="trip__unit">steps</span>
-              </div>
-              <div class="workout__details">
-                <span class="workout__icon">⏱</span>
-                <span class="workout__value">${duration}</span>
-                <span class="workout__unit">min</span>
-              </div>
-                <div class="trip__details flex justify-center">
-                <span class="trip__icon pr-1">⚡</span>
-                <span class="trip__value pr-1">${rest.peace}</span>
-                <span class="trip__unit">steps/min</span>
-                </div>
-              </div>
-          </li>
-    `;
-    }
-    if (typeOfTrip === "cycling") {
-      html = `
-      <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-amber-500 mb-2">
-        <div class="flex flex-row">
-          <h2 class="pr-1">${name}</h2>
-          <h3> on ${date}</h3>
-        </div>
-          <div class="flex flex-row justify-around">
-          <div class="trip__details pr-8">
-            <span class="trip__icon">🚲</span>
-            <span class="trip__value">${distance}</span>
-            <span class="trip__unit">km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⏱</span>
-            <span class="workout__value">${duration}</span>
-            <span class="workout__unit">min</span>
-          </div>
-        </div>
-        <div class="flex flex-row justify-around">
-          <div class="trip__details">
-            <span class="trip__icon">⚡</span>
-            <span class="trip__value">${rest.speed}</span>
-            <span class="trip__unit pr-2">km/min</span>
-          </div>
-          ${
-            rest.elevationGain
-              ? `
-          <div class="trip__details">
-          <span class="trip__icon">⛰️</span>
-          <span class="trip__value pr-1">${rest.elevationGain}</span>
-          <span class="trip__unit">meters</span>
-          </div>
-          `
-              : ""
-          }
-        </div>
-      </li>
-      `;
-    }
-    if (typeOfTrip === "car") {
-      console.log("caar");
-      html = `
-        <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-pink-500 mb-2">
-        <div class="flex flex-row">
-            <h2 class="pr-1">${name}</h2>
-            <h3> on ${date}</h3>
-          </div>
-          <div class="flex flex-row justify-evenly">
-            <div class="trip__details pr-8">
-              <span class="trip__icon">🚗</span>
-              <span class="trip__value">${distance}</span>
-              <span class="trip__unit">km</span>
-            </div>
-            <div class="workout__details">
-              <span class="workout__icon">⏱</span>
-              <span class="workout__value">${duration}</span>
-              <span class="workout__unit">h</span>
-            </div>
-              <div class="trip__details">
-              <span class="trip__icon">💰</span>
-              <span class="trip__value">${rest.tripCost}</span>
-              <span class="trip__unit">$</span>
-              </div>
-            </div>
-        </li>
-        `;
-    }
-    if (typeOfTrip === "flight") {
-      html = `
-        <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2">
-        <div class="flex flex-row">
-          <h2 class='pr-1'>${name}</h2>
-          <h3>on ${date}</h3>
-        </div>
-        <div class="flex flex-row justify-evenly">
-          <div class="trip__details pr-8">
-            <span class="trip__icon">✈️</span>
-            <span class="trip__value">${distance}</span>
-            <span class="trip__unit">km</span>
-          </div>
-          <div class="workout__details">
-            <span class="workout__icon">⏱</span>
-            <span class="workout__value">${duration}</span>
-            <span class="workout__unit">days</span>
-            </div>
-              <div class="trip__details">
-              <span class="trip__icon">💰</span>
-              <span class="trip__value">${rest.ticketCost}</span>
-              <span class="trip__unit">$</span>
-            </div>
-          </div>
-      </li>
-        `;
-    }
-
-    form.insertAdjacentHTML("afterend", html);
-  };
 }
 const app = new App();

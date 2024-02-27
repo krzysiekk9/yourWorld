@@ -2,12 +2,7 @@ import Trip from "./Trip.js";
 
 class Hike extends Trip {
   typeOfTrip = "hike";
-  //   constructor(name, coords, date, duration, stepsNum) {
-  //     super(name, coords, date, duration);
-  //     this._setDescription();
-  //     this.stepsNum = stepsNum;
-  //     // this.peace = this.calcPace();
-  //   }
+
   calcPace() {
     return Math.round((+this._data.distance / +this._data.duration) * 10) / 10;
   }
