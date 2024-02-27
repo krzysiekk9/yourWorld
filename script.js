@@ -19,6 +19,12 @@ import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 
+import hike from "./src/js/hikeTrip";
+import cyclingTrip from "./src/js/cyclingTrip";
+import carTrip from "./src/js/carTrip";
+import flightTrip from "./src/js/flightTrip";
+import hikeTrip from "./src/js/hikeTrip";
+
 const form = document.querySelector(".form");
 const inputName = document.querySelector(".form__input--name");
 const inputType = document.querySelector(".form__input--type");
@@ -38,81 +44,81 @@ const inputAvgFuelConsumption = document.querySelector(
 const formTicketCost = document.querySelector(".form__ticket-cost");
 const inputTicketCost = document.querySelector(".form__input--ticket-cost");
 
-class Trip {
-  constructor(name, coords, date, duration) {
-    this.name = name;
-    this.coords = coords;
-    this.date = date;
-    this.duration = duration;
-  }
-  _setDescription() {
-    this.description = console.log("description", this.date);
-  }
-}
+// class Trip {
+//   constructor(name, coords, date, duration) {
+//     this.name = name;
+//     this.coords = coords;
+//     this.date = date;
+//     this.duration = duration;
+//   }
+//   _setDescription() {
+//     this.description = console.log("description", this.date);
+//   }
+// }
 
-class Hike extends Trip {
-  typeOfTrip = "hike";
-  constructor(name, coords, date, duration, stepsNum) {
-    super(name, coords, date, duration);
-    this._setDescription();
-    this.stepsNum = stepsNum;
-    this.peace = this.calcPace();
-  }
-  calcPace() {
-    return Math.round((+this.stepsNum / +this.duration) * 10) / 10;
-  }
-}
+// class Hike extends Trip {
+//   typeOfTrip = "hike";
+//   constructor(name, coords, date, duration, stepsNum) {
+//     super(name, coords, date, duration);
+//     this._setDescription();
+//     this.stepsNum = stepsNum;
+//     this.peace = this.calcPace();
+//   }
+//   calcPace() {
+//     return Math.round((+this.stepsNum / +this.duration) * 10) / 10;
+//   }
+// }
 
-class Cycling extends Trip {
-  typeOfTrip = "cycling";
-  constructor(name, coords, date, duration, distance, elevationGain) {
-    super(name, coords, date, duration);
-    this.distance = distance;
-    this.elevationGain = elevationGain;
-    this._setDescription();
-    this.speed = this.calcSpeed();
-  }
-  calcSpeed() {
-    return Math.round((+this.distance / +this.duration) * 100) / 100;
-  }
-}
+// class Cycling extends Trip {
+//   typeOfTrip = "cycling";
+//   constructor(name, coords, date, duration, distance, elevationGain) {
+//     super(name, coords, date, duration);
+//     this.distance = distance;
+//     this.elevationGain = elevationGain;
+//     this._setDescription();
+//     this.speed = this.calcSpeed();
+//   }
+//   calcSpeed() {
+//     return Math.round((+this.distance / +this.duration) * 100) / 100;
+//   }
+// }
 
-class Car extends Trip {
-  typeOfTrip = "car";
-  constructor(
-    name,
-    coords,
-    date,
-    duration,
-    distance,
-    gasPrice,
-    avgFuelConsumption
-  ) {
-    super(name, coords, date, duration);
-    this.distance = distance;
-    this.gasPrice = gasPrice;
-    this.avgFuelConsumption = avgFuelConsumption;
-    this._setDescription();
-    this.tripCost = this.calcCost();
-  }
-  calcCost() {
-    return (
-      Math.round(
-        ((+this.distance * +this.avgFuelConsumption) / 100) *
-          this.gasPrice *
-          100
-      ) / 100
-    );
-  }
-}
+// class Car extends Trip {
+//   typeOfTrip = "car";
+//   constructor(
+//     name,
+//     coords,
+//     date,
+//     duration,
+//     distance,
+//     gasPrice,
+//     avgFuelConsumption
+//   ) {
+//     super(name, coords, date, duration);
+//     this.distance = distance;
+//     this.gasPrice = gasPrice;
+//     this.avgFuelConsumption = avgFuelConsumption;
+//     this._setDescription();
+//     this.tripCost = this.calcCost();
+//   }
+//   calcCost() {
+//     return (
+//       Math.round(
+//         ((+this.distance * +this.avgFuelConsumption) / 100) *
+//           this.gasPrice *
+//           100
+//       ) / 100
+//     );
+//   }
+// }
 
-class Flight extends Trip {
-  typeOfTrip = "flight";
-  constructor(name, coords, date, duration, ticketCost) {
-    super(name, coords, date, duration);
-    this.ticketCost = ticketCost;
-  }
-}
+// class Flight extends Trip {
+//   typeOfTrip = "flight";
+//   constructor(name, coords, date, duration, ticketCost) {
+//     super(name, coords, date, duration);
+//     this.ticketCost = ticketCost;
+//   }
+// }
 
 class App {
   #map;
@@ -123,10 +129,19 @@ class App {
   typeOfTrip = "";
   #markerIcon = L.icon({
     iconUrl: "./img/location-pin.png",
-    // iconSize: [38, 95], // size of the icon
-    // iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-    // popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
   });
+  tripDetails = {
+    name: "",
+    coords: [],
+    date: "",
+    duration: 0,
+    distance: 0,
+    elevationGain: 0,
+    fuelCost: 0,
+    avgFuelConsumption: 0,
+    ticketCost: 0,
+    tripType: "",
+  };
 
   constructor() {
     this._loadMap();
@@ -166,7 +181,7 @@ class App {
 
   _onMapClick(e) {
     const { lat, lng } = e.latlng;
-    this.#coords = [lat, lng];
+    this.tripDetails.coords = [lat, lng];
     L.marker([lat, lng], {
       icon: this.#markerIcon,
     }).addTo(this.#map);
@@ -210,62 +225,70 @@ class App {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       console.log("type", inputType.value);
+      this.tripDetails = {
+        name: inputName.value,
+        date: inputDate.value,
+        duration: inputDuration.value,
+        distance: inputDistance.value,
+        elevationGain: inputElevationGain.value,
+        fuelCost: inputFuelCost.value,
+        avgFuelConsumption: inputAvgFuelConsumption.value,
+        ticketCost: inputTicketCost.value,
+      };
+      console.log("1", this.tripDetails);
+
       switch (inputType.value) {
         case "flight":
-          console.log("aaa"); //name, coords, date, duration, ticketCost
-          console.log(inputTicketCost.value);
-          this.#newTrip = new Flight(
-            inputName.value,
-            this.#coords,
-            inputDate.value,
-            inputDuration.value,
-            inputDistance.value,
-            inputTicketCost.value
-          );
+          // console.log("aaa"); //name, coords, date, duration, ticketCost
+          // console.log(inputTicketCost.value);
+          // this.#newTrip = new Flight(
+          //   inputName.value,
+          //   this.#coords,
+          //   inputDate.value,
+          //   inputDuration.value,
+          //   inputDistance.value,
+          //   inputTicketCost.value
+          // );
+          flightTrip.render(this.tripDetails);
           break;
         case "car":
-          this.#newTrip = new Car( //name, coords, date, duration, drivenDistance, gasPric name,
-            // coords,
-            // date,
-            // duration,
-            // drivenDistance,
-            // gasPrice,
-            // avgFuelConsumption
-            inputName.value,
-            this.#coords,
-            inputDate.value,
-            inputDuration.value,
-            inputDistance.value,
-            inputFuelCost.value,
-            inputAvgFuelConsumption.value
-          );
+          // this.#newTrip = new Car( //name, coords, date, duration, drivenDistance, gasPric name,
+          //   // coords,
+          //   // date,
+          //   // duration,
+          //   // drivenDistance,
+          //   // gasPrice,
+          //   // avgFuelConsumption
+          //   // inputName.value,
+          //   // this.#coords,
+          //   // inputDate.value,
+          //   // inputDuration.value,
+          //   // inputDistance.value,
+          //   // inputFuelCost.value,
+          //   // inputAvgFuelConsumption.value
+          // );
+          carTrip.render(this.tripDetails);
           break;
         case "cycling": //name, coords, date, duration, distance, elevationGain
-          this.#newTrip = new Cycling(
-            inputName.value,
-            this.#coords,
-            inputDate.value,
-            inputDuration.value,
-            inputDistance.value,
-            inputElevationGain.value
-          );
+          cyclingTrip.render(this.tripDetails);
           break;
         case "hike": //name, coords, date, duration, stepsNum
-          this.#newTrip = new Hike(
-            inputName.value,
-            this.#coords,
-            inputDate.value,
-            inputDuration.value,
-            inputDistance.value
-          );
+          // this.#newTrip = new Hike(
+          //   inputName.value,
+          //   this.#coords,
+          //   inputDate.value,
+          //   inputDuration.value,
+          //   inputDistance.value
+          // );
+          hikeTrip.render(this.tripDetails);
           break;
       }
-      this._renderWorkout(this.#newTrip);
+      // this._renderTrip(this.tripDetails);
       this._hideForm();
     });
   }
 
-  _renderWorkout = ({
+  _renderTrip = ({
     name,
     coords,
     date,
