@@ -35,6 +35,8 @@ const inputFuelCost = document.querySelector(".form__input--fuel-cost");
 const inputAvgFuelConsumption = document.querySelector(
   ".form__input--average-fuel-consumption"
 );
+const formTicketCost = document.querySelector(".form__ticket-cost");
+const inputTicketCost = document.querySelector(".form__input--ticket-cost");
 
 class Trip {
   constructor(name, coords, date, duration) {
@@ -106,10 +108,9 @@ class Car extends Trip {
 
 class Flight extends Trip {
   typeOfTrip = "flight";
-  constructor(name, coords, date, duration, ticketCost, flightDuration) {
+  constructor(name, coords, date, duration, ticketCost) {
     super(name, coords, date, duration);
     this.ticketCost = ticketCost;
-    this.flightDuration = flightDuration;
   }
 }
 
@@ -159,6 +160,10 @@ class App {
     inputName.focus();
   }
 
+  _hideForm() {
+    form.classList.add("hidden");
+  }
+
   _onMapClick(e) {
     const { lat, lng } = e.latlng;
     this.#coords = [lat, lng];
@@ -172,11 +177,10 @@ class App {
   _onTripTypeChange() {
     inputType.addEventListener("change", (e) => {
       let option = e.target.value;
-      console.log("option", option);
+      this._hideUnnecessaryFields();
       if (option === "hike") {
         inputDistance.placeholder = "steps";
         inputDuration.placeholder = "min";
-        formElevationGain.classList.add("hidden");
       }
       if (option === "cycling") {
         inputDuration.placeholder = "min";
@@ -188,7 +192,18 @@ class App {
         inputDistance.placeholder = "km";
         formFuel.classList.remove("hidden");
       }
+      if (option === "flight") {
+        inputDistance.placeholder = "km";
+        inputDuration.placeholder = "days";
+        formTicketCost.classList.remove("hidden");
+      }
     });
+  }
+
+  _hideUnnecessaryFields() {
+    formElevationGain.classList.add("hidden");
+    formFuel.classList.add("hidden");
+    formTicketCost.classList.add("hidden");
   }
 
   _onFormSubmition() {
@@ -197,15 +212,15 @@ class App {
       console.log("type", inputType.value);
       switch (inputType.value) {
         case "flight":
-          console.log("aaa"); //name, coords, date, duration, ticketCost, flightDuration
+          console.log("aaa"); //name, coords, date, duration, ticketCost
+          console.log(inputTicketCost.value);
           this.#newTrip = new Flight(
             inputName.value,
             this.#coords,
             inputDate.value,
             inputDuration.value,
             inputDistance.value,
-            10, // CHANGE
-            10
+            inputTicketCost.value
           );
           break;
         case "car":
@@ -246,6 +261,7 @@ class App {
           break;
       }
       this._renderWorkout(this.#newTrip);
+      this._hideForm();
     });
   }
 
@@ -288,9 +304,8 @@ class App {
     `;
     }
     if (typeOfTrip === "cycling") {
-      console.log("rest", rest);
       html = `
-      <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-blue-500 mb-2">
+      <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-amber-500 mb-2">
         <div class="flex flex-row">
           <h2 class="pr-1">${name}</h2>
           <h3> on ${date}</h3>
@@ -313,11 +328,17 @@ class App {
             <span class="trip__value">${rest.speed}</span>
             <span class="trip__unit pr-2">km/min</span>
           </div>
+          ${
+            rest.elevationGain
+              ? `
           <div class="trip__details">
-            <span class="trip__icon">⛰️</span>
-            <span class="trip__value pr-1">${rest.elevationGain}</span>
-            <span class="trip__unit">meters</span>
+          <span class="trip__icon">⛰️</span>
+          <span class="trip__value pr-1">${rest.elevationGain}</span>
+          <span class="trip__unit">meters</span>
           </div>
+          `
+              : ""
+          }
         </div>
       </li>
       `;
@@ -353,25 +374,27 @@ class App {
     if (typeOfTrip === "flight") {
       html = `
         <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2">
-        <h2>${name}</h2>
-        <h3>Hike on ${date}</h3>
         <div class="flex flex-row">
+          <h2 class='pr-1'>${name}</h2>
+          <h3>on ${date}</h3>
+        </div>
+        <div class="flex flex-row justify-evenly">
           <div class="trip__details pr-8">
             <span class="trip__icon">✈️</span>
-            <span class="trip__value">12000</span>
+            <span class="trip__value">${distance}</span>
             <span class="trip__unit">km</span>
           </div>
           <div class="workout__details">
             <span class="workout__icon">⏱</span>
-            <span class="workout__value">24</span>
-            <span class="workout__unit">min</span>
+            <span class="workout__value">${duration}</span>
+            <span class="workout__unit">days</span>
+            </div>
+              <div class="trip__details">
+              <span class="trip__icon">💰</span>
+              <span class="trip__value">${rest.ticketCost}</span>
+              <span class="trip__unit">$</span>
+            </div>
           </div>
-        </div>
-        <div class="trip__details">
-          <span class="trip__icon">⚡</span>
-          <span class="trip__value">50</span>
-          <span class="trip__unit">steps/min</span>
-        </div>
       </li>
         `;
     }

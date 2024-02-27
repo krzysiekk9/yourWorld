@@ -12,7 +12,7 @@
       class="w-1/4 h-5/6 absolute flex flex-col items-center top-1/2 left-8 transform -translate-y-1/2 bg-slate-800/85 z-10 px-2 pt-8 pb-2 rounded-2xl shadow-xl"
     >
       <img src="./img/logo_globe.png" alt="logo" class="w-1/4 pb-6 m-0" />
-      <ul class="trips w-full text-slate-200 p-2">
+      <ul class="trips w-full text-slate-200 p-2 overflow-auto">
         <form
           class="form hidden w-full bg-gray-600/50 rounded-md mb-2 p-3 font-sans text-lg text-slate-200"
         >
@@ -69,6 +69,13 @@
             <input
               class="form__input form__input--average-fuel-consumption w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="liters"
+            />
+          </div>
+          <div class="form__ticket-cost pb-2 text-center">
+            <label class="form__label">Ticket Cost</label>
+            <input
+              class="form__input form__input--ticket-cost w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
+              placeholder="$"
             />
           </div>
           <div class="form__row pb-2 text-center justify-center flex">
