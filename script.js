@@ -192,13 +192,14 @@ class App {
 
       formData.delete("file");
 
-      // console.log(this.tripDetails);
-      // fetch("http://localhost:3000/api/tripDetails", {
-      //   method: "post",
-      //   body: formData,
-      // })
-      //   .then((res) => res.json())
-      //   .then((data) => console.log(data));
+      const dataUpload = new URLSearchParams(formData);
+
+      fetch("http://localhost:3000/api/tripDetails", {
+        method: "post",
+        body: dataUpload,
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data));
 
       this._hideForm();
     });
