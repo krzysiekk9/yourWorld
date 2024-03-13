@@ -155,6 +155,7 @@ class App {
         avgFuelConsumption: inputAvgFuelConsumption.value,
         ticketCost: inputTicketCost.value,
         tripType: inputType.value,
+        photos: inputFiles.files[0],
       };
 
       switch (this.tripDetails.tripType) {
@@ -171,6 +172,34 @@ class App {
           hikeTrip.render(this.tripDetails);
           break;
       }
+      const formData = new FormData(form);
+      // console.log("newForm", ...formData);
+
+      if (formData.get("file").name !== "" && formData.get("file").size !== 0) {
+        const formFiles = new FormData();
+
+        for (let i = 0; i < inputFiles.files.length; i++) {
+          formFiles.append("files", inputFiles.files[i]);
+        }
+
+        fetch("http://localhost:3000/api/photosUpload", {
+          method: "post",
+          body: formFiles,
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data));
+      }
+
+      formData.delete("file");
+
+      // console.log(this.tripDetails);
+      // fetch("http://localhost:3000/api/tripDetails", {
+      //   method: "post",
+      //   body: formData,
+      // })
+      //   .then((res) => res.json())
+      //   .then((data) => console.log(data));
+
       this._hideForm();
     });
   }

@@ -14,18 +14,23 @@
       <img src="./img/logo_globe.png" alt="logo" class="w-1/4 pb-6 m-0" />
       <ul class="trips w-full text-slate-200 p-2 overflow-auto">
         <form
+          id="form"
+          method="post"
+          enctype="multipart/form-data"
           class="form hidden w-full bg-gray-600/50 rounded-md mb-2 p-3 font-sans text-lg text-slate-200"
         >
           <div class="form__row text-center pb-2">
             <label class="form__label tracking-wide pr-4">Name</label>
             <input
               type="text"
+              name="name"
               class="form__input form__input--name bg-gray-500/50 w-1/2 rounded-md outline-none pl-3"
             />
           </div>
           <div class="form__row text-center pb-2 justify-evenly flex">
             <label class="form__label tracking-wide">Type</label>
             <select
+              name="tripType"
               class="form__input form__input--type bg-gray-500/50 focus:bg-gray-500 w-1/3 rounded-md outline-none"
             >
               <option value="flight">Flight</option>
@@ -38,6 +43,7 @@
             <input
               class="form__input form__input--date bg-gray-500/50 focus:bg-gray-500 w-1/3 rounded-md outline-none pl-2"
               type="date"
+              name="date"
             />
           </div>
           <div class="form__row text-center pb-2 justify-evenly flex">
@@ -45,11 +51,13 @@
             <input
               class="form__input form__input--duration w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="days"
+              name="duration"
             />
             <label class="form__label">Distance</label>
             <input
               class="form__input form__input--distance w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="km"
+              name="distance"
             />
           </div>
           <div class="form__elevation-gain hidden pb-2 text-center">
@@ -57,6 +65,7 @@
             <input
               class="form__input form__input--elevation-gain w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="m"
+              name="elevationGain"
             />
           </div>
           <div class="form__fuel hidden pb-2 text-center flex justify-evenly">
@@ -64,11 +73,13 @@
             <input
               class="form__input form__input--fuel-cost w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="$"
+              name="fuelCost"
             />
             <label class="form__label">Average fuel consumption</label>
             <input
               class="form__input form__input--average-fuel-consumption w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="liters"
+              name="avgFuel"
             />
           </div>
           <div class="form__ticket-cost pb-2 text-center">
@@ -76,6 +87,7 @@
             <input
               class="form__input form__input--ticket-cost w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="$"
+              name="ticketCost"
             />
           </div>
           <div class="form__row pb-2 text-center justify-center flex">
@@ -83,8 +95,9 @@
             <input
               class="form__input form__input--photos w-5/6 text-base file:text-base file:text-slate-200 file:bg-gray-500/50 file:outline-none file:border-none file:rounded-md file:hover:bg-gray-700/50 file:hover:cursor-pointer"
               type="file"
+              name="file"
               accept="image/png, image/jpeg"
-              multiple="true"
+              multiple="false"
             />
           </div>
           <div class="flex text-center justify-center">
@@ -95,6 +108,43 @@
             </button>
           </div>
         </form>
+        <li
+          data-id="123"
+          class="bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2"
+        >
+          <div class="flex flex-row">
+            <div class="w-11/12">
+              <div class="flex flex-row">
+                <h2 class="pr-1">NAme</h2>
+                <h3>on 12.12.2002</h3>
+              </div>
+              <div class="flex flex-row justify-evenly">
+                <div class="trip__details pr-8">
+                  <span class="trip__icon">✈️</span>
+                  <span class="trip__value">200</span>
+                  <span class="trip__unit">km</span>
+                </div>
+                <div class="workout__details">
+                  <span class="workout__icon">⏱</span>
+                  <span class="workout__value">2</span>
+                  <span class="workout__unit">days</span>
+                </div>
+                <div class="trip__details">
+                  <span class="trip__icon">💰</span>
+                  <span class="trip__value">450</span>
+                  <span class="trip__unit">$</span>
+                </div>
+              </div>
+            </div>
+            <div class="w-1/12 items-center flex">
+              <img
+                src="./img/photos_icon.png"
+                alt="photos"
+                class="photos_icon"
+              />
+            </div>
+          </div>
+        </li>
         <!-- <li
           data-id="123"
           class="bg-gray-800/80 rounded-md p-2 border-l-4 border-green-500 mb-2"
