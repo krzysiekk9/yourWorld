@@ -145,61 +145,54 @@ class App {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      this.tripDetails = {
-        name: inputName.value,
-        date: inputDate.value,
-        duration: inputDuration.value,
-        distance: inputDistance.value,
-        elevationGain: inputElevationGain.value,
-        fuelCost: inputFuelCost.value,
-        avgFuelConsumption: inputAvgFuelConsumption.value,
-        ticketCost: inputTicketCost.value,
-        tripType: inputType.value,
-        photos: inputFiles.files[0],
+      const generateListItem = ({ tripDetails, id }) => {
+        switch (tripDetails.tripType) {
+          case "flight":
+            flightTrip.render(tripDetails);
+            break;
+          case "car":
+            carTrip.render(tripDetails);
+            break;
+          case "cycling":
+            cyclingTrip.render(tripDetails);
+            break;
+          case "hike":
+            hikeTrip.render(tripDetails);
+            break;
+        }
       };
 
-      switch (this.tripDetails.tripType) {
-        case "flight":
-          flightTrip.render(this.tripDetails);
-          break;
-        case "car":
-          carTrip.render(this.tripDetails);
-          break;
-        case "cycling":
-          cyclingTrip.render(this.tripDetails);
-          break;
-        case "hike":
-          hikeTrip.render(this.tripDetails);
-          break;
-      }
       const formData = new FormData(form);
-      // console.log("newForm", ...formData);
 
       if (formData.get("file").name !== "" && formData.get("file").size !== 0) {
-        const formFiles = new FormData();
+        formData.delete("file");
+        console.log("jest plik");
 
         for (let i = 0; i < inputFiles.files.length; i++) {
-          formFiles.append("files", inputFiles.files[i]);
+          formData.append("files", inputFiles.files[i]);
         }
-
         fetch("http://localhost:3000/api/photosUpload", {
           method: "post",
-          body: formFiles,
+          body: formData,
         })
           .then((res) => res.json())
-          .then((data) => console.log(data));
+          .then((data) => {
+            console.log(data);
+            generateListItem(data);
+          });
+      } else {
+        const dataUpload = new URLSearchParams(formData);
+        dataUpload.delete("file");
+        fetch("http://localhost:3000/api/tripDetails", {
+          method: "post",
+          body: dataUpload,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            generateListItem(data);
+          });
       }
-
-      formData.delete("file");
-
-      const dataUpload = new URLSearchParams(formData);
-
-      fetch("http://localhost:3000/api/tripDetails", {
-        method: "post",
-        body: dataUpload,
-      })
-        .then((res) => res.json())
-        .then((data) => console.log(data));
 
       this._hideForm();
     });

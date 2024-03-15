@@ -3,7 +3,7 @@ export default class Trip {
   _parentElement = document.querySelector(".form");
 
   _setDescription() {
-    //TODO fix description dunction
+    //TODO fix description function
     this.description = console.log("description", this.date);
   }
   render(data) {
