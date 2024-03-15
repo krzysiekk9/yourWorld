@@ -10,7 +10,7 @@ export default class Trip {
   render(data, id) {
     this._data = data;
     this._id = id;
-    console.log("this data", this._data);
+
     const markup = this._generateMarkup();
 
     this._parentElement.insertAdjacentHTML("afterend", markup);

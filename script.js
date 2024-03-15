@@ -43,6 +43,7 @@ const inputAvgFuelConsumption = document.querySelector(
 const formTicketCost = document.querySelector(".form__ticket-cost");
 const inputTicketCost = document.querySelector(".form__input--ticket-cost");
 const imageIcon = document.querySelector(".photos_icon");
+const tripList = document.querySelector(".trips");
 
 class App {
   #map;
@@ -67,6 +68,7 @@ class App {
   constructor() {
     this._loadMap();
     this._onFormSubmition();
+    this._onImageClick();
   }
 
   _loadMap() {
@@ -197,13 +199,27 @@ class App {
 
       this._hideForm();
     });
-    // this._onImageClick();
   }
 
-  // _onImageClick() {
-  //   imageIcon.addEventListener("click", (e) => {
-  //     console.log("image clicked");
-  //   });
-  // }
+  _onImageClick() {
+    tripList.addEventListener("click", (e) => {
+      if (e.target.matches(".photos_icon")) {
+        const elementId = e.target.closest("li").id;
+        console.log("image clicked", elementId);
+
+        fetch("http://localhost:3000/api/getPhotos", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: elementId }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+          });
+      }
+    });
+  }
 }
 const app = new App();

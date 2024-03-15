@@ -9,7 +9,7 @@ class Hike extends Trip {
   }
   _generateMarkup() {
     return `
-            <li data-id=${
+            <li id=${
               this._id
             } class="bg-gray-800/80 rounded-md p-2 border-l-4 border-green-500 mb-2">
                 <div class="flex flex-row">
