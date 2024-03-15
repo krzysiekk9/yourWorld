@@ -7,7 +7,7 @@ class Flight extends Trip {
   _generateMarkup() {
     return `
 
-            <li data-id="123" class="bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2">
+            <li data-id=${this._id} class="bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2">
                 <div class="flex flex-row">
                     <div class="w-11/12">
                         <div class="flex flex-row">

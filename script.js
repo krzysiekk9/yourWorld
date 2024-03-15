@@ -42,6 +42,7 @@ const inputAvgFuelConsumption = document.querySelector(
 );
 const formTicketCost = document.querySelector(".form__ticket-cost");
 const inputTicketCost = document.querySelector(".form__input--ticket-cost");
+const imageIcon = document.querySelector(".photos_icon");
 
 class App {
   #map;
@@ -148,16 +149,16 @@ class App {
       const generateListItem = ({ tripDetails, id }) => {
         switch (tripDetails.tripType) {
           case "flight":
-            flightTrip.render(tripDetails);
+            flightTrip.render(tripDetails, id);
             break;
           case "car":
-            carTrip.render(tripDetails);
+            carTrip.render(tripDetails, id);
             break;
           case "cycling":
-            cyclingTrip.render(tripDetails);
+            cyclingTrip.render(tripDetails, id);
             break;
           case "hike":
-            hikeTrip.render(tripDetails);
+            hikeTrip.render(tripDetails, id);
             break;
         }
       };
@@ -196,6 +197,13 @@ class App {
 
       this._hideForm();
     });
+    // this._onImageClick();
   }
+
+  // _onImageClick() {
+  //   imageIcon.addEventListener("click", (e) => {
+  //     console.log("image clicked");
+  //   });
+  // }
 }
 const app = new App();
