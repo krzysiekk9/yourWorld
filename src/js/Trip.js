@@ -4,7 +4,7 @@ export default class Trip {
   _parentElement = document.querySelector(".form");
 
   _setDescription() {
-    //TODO fix description function
+    //FIXME description function
     this.description = console.log("description", this.date);
   }
   render(data, id) {

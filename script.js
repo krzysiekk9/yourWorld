@@ -44,6 +44,10 @@ const formTicketCost = document.querySelector(".form__ticket-cost");
 const inputTicketCost = document.querySelector(".form__input--ticket-cost");
 const imageIcon = document.querySelector(".photos_icon");
 const tripList = document.querySelector(".trips");
+const gallery = document.querySelector(".gallery");
+const galleryImage = document.querySelector(".gallery-photo");
+const leftArrow = document.querySelector(".left-arrow");
+const rightArrow = document.querySelector(".right-arrow");
 
 class App {
   #map;
@@ -148,19 +152,19 @@ class App {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const generateListItem = ({ tripDetails, id }) => {
+      const generateListItem = ({ tripDetails, tripId }) => {
         switch (tripDetails.tripType) {
           case "flight":
-            flightTrip.render(tripDetails, id);
+            flightTrip.render(tripDetails, tripId);
             break;
           case "car":
-            carTrip.render(tripDetails, id);
+            carTrip.render(tripDetails, tripId);
             break;
           case "cycling":
-            cyclingTrip.render(tripDetails, id);
+            cyclingTrip.render(tripDetails, tripId);
             break;
           case "hike":
-            hikeTrip.render(tripDetails, id);
+            hikeTrip.render(tripDetails, tripId);
             break;
         }
       };
@@ -169,17 +173,21 @@ class App {
 
       if (formData.get("file").name !== "" && formData.get("file").size !== 0) {
         formData.delete("file");
-        console.log("jest plik");
+        console.log("jest plik", ...formData);
 
         for (let i = 0; i < inputFiles.files.length; i++) {
           formData.append("files", inputFiles.files[i]);
         }
+
         fetch("http://localhost:3000/api/photosUpload", {
           method: "post",
           body: formData,
         })
           .then((res) => res.json())
           .then((data) => {
+            if (data.success === false) {
+              return alert(data.message);
+            }
             console.log(data);
             generateListItem(data);
           });
@@ -192,6 +200,9 @@ class App {
         })
           .then((res) => res.json())
           .then((data) => {
+            if (data.success === false) {
+              return alert(data.message);
+            }
             console.log(data);
             generateListItem(data);
           });
@@ -205,21 +216,53 @@ class App {
     tripList.addEventListener("click", (e) => {
       if (e.target.matches(".photos_icon")) {
         const elementId = e.target.closest("li").id;
+        console.log("type", typeof elementId);
         console.log("image clicked", elementId);
+        // this._openGallery();
 
-        fetch("http://localhost:3000/api/getPhotos", {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: elementId }),
-        })
+        fetch(`http://localhost:3000/api/getPhotos/${elementId}`)
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            if (data.success === true) {
+              console.log("1", data);
+              const imageUrlArr = data.imageArr[0].url;
+              console.log("arr", imageUrlArr);
+              galleryImage.src = imageUrlArr[0];
+              this._openGallery();
+              if (imageUrlArr.length > 1) {
+                this._showArrows();
+              }
+            }
           });
+
+        // fetch("http://localhost:3000/api/getPhotos", {
+        //   method: "post",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({ id: elementId }),
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     console.log(data);
+        //     //TODO display photos
+        //     //
+        //   });
       }
     });
+  }
+
+  _openGallery() {
+    gallery.classList.remove("hidden");
+
+    const closeGallery = document.querySelector(".close--gallery");
+    closeGallery.addEventListener("click", (e) => {
+      gallery.classList.add("hidden");
+    });
+  }
+  _showArrows() {
+    leftArrow.classList.remove("hidden");
+    rightArrow.classList.remove("hidden");
   }
 }
 const app = new App();

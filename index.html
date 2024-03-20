@@ -109,7 +109,7 @@
           </div>
         </form>
 
-        <li
+        <!-- <li
           data-id="123"
           class="bg-gray-800/80 rounded-md p-2 border-l-4 border-amber-500 mb-2"
         >
@@ -150,7 +150,7 @@
               <img src="./img/photos.png" alt="photos" class="photos_icon" />
             </div>
           </div>
-        </li>
+        </li> -->
         <!-- 
         <li
           data-id="123"
@@ -220,6 +220,35 @@
         </li>
         ------------------- -->
       </ul>
+    </div>
+    <div
+      class="gallery hidden absolute w-screen h-screen bg-gray-800/80 z-10 p-16"
+    >
+      <div class="w-full h-full rounded-md relative z-10 p-6">
+        <button
+          class="close--gallery h-6 w-6 bg-slate-200 rounded-2xl p-1 top-0 right-0 absolute"
+        >
+          <img src="./img/cross.png" alt="close" />
+        </button>
+        <button
+          class="left-arrow hidden h-6 w-6 bg-slate-200 rounded-2xl p-1 top-2/4 left-0 absolute"
+        >
+          <img src="./img/left.png" alt="left-arrow" />
+        </button>
+        <button
+          class="right-arrow hidden h-6 w-6 bg-slate-200 rounded-2xl p-1 top-2/4 right-0 absolute"
+        >
+          <img src="./img/right.png" alt="right-arrow" />
+        </button>
+        <!-- <img src="./img/rower.jpg" alt="test" class="object-center" /> -->
+        <div class="w-full h-full flex justify-center items-center">
+          <img
+            src="./img/rower.jpg"
+            alt="phoot-display"
+            class="gallery-photo object-center rounded-md"
+          />
+        </div>
+      </div>
     </div>
     <div class="mapWrapper h-screen w-screen z-0 absolute">
       <div id="map" class="h-full w-full z-0"></div>
