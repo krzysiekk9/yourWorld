@@ -173,7 +173,6 @@ class App {
 
       if (formData.get("file").name !== "" && formData.get("file").size !== 0) {
         formData.delete("file");
-        console.log("jest plik", ...formData);
 
         for (let i = 0; i < inputFiles.files.length; i++) {
           formData.append("files", inputFiles.files[i]);
@@ -227,42 +226,61 @@ class App {
               console.log("1", data);
               const imageUrlArr = data.imageArr[0].url;
               console.log("arr", imageUrlArr);
-              galleryImage.src = imageUrlArr[0];
-              this._openGallery();
-              if (imageUrlArr.length > 1) {
-                this._showArrows();
-              }
+
+              this._openGallery(imageUrlArr);
             }
           });
-
-        // fetch("http://localhost:3000/api/getPhotos", {
-        //   method: "post",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ id: elementId }),
-        // })
-        //   .then((res) => res.json())
-        //   .then((data) => {
-        //     console.log(data);
-        //     //TODO display photos
-        //     //
-        //   });
       }
     });
   }
 
-  _openGallery() {
+  _openGallery(imageUrlArr) {
     gallery.classList.remove("hidden");
+    let currentImage = 0; //currently viewed image
+
+    galleryImage.src = imageUrlArr[currentImage]; //setting image url from AWS as a source of displayed image
 
     const closeGallery = document.querySelector(".close--gallery");
     closeGallery.addEventListener("click", (e) => {
       gallery.classList.add("hidden");
     });
+
+    if (imageUrlArr.length > 1) {
+      this._showArrows(currentImage, imageUrlArr);
+
+      rightArrow.addEventListener("click", (e) => {
+        if (currentImage < imageUrlArr.length - 1) {
+          currentImage++;
+          galleryImage.src = imageUrlArr[currentImage];
+          this._showArrows(currentImage, imageUrlArr);
+        }
+      });
+
+      leftArrow.addEventListener("click", (e) => {
+        if (currentImage > 0) {
+          currentImage--;
+          galleryImage.src = imageUrlArr[currentImage];
+          this._showArrows(currentImage, imageUrlArr);
+        }
+      });
+    }
   }
-  _showArrows() {
-    leftArrow.classList.remove("hidden");
-    rightArrow.classList.remove("hidden");
+  _showArrows(currentImage, imageUrlArr) {
+    //if there is ony one photo arrows unnecessary
+    //only need right arrow
+    if (currentImage === 0) {
+      rightArrow.classList.remove("hidden");
+      leftArrow.classList.add("hidden");
+    }
+    //only need left arrow
+    if (currentImage === imageUrlArr.length - 1) {
+      rightArrow.classList.add("hidden");
+      leftArrow.classList.remove("hidden");
+    }
+    if (currentImage > 0 && currentImage < imageUrlArr.length - 1) {
+      leftArrow.classList.remove("hidden");
+      rightArrow.classList.remove("hidden");
+    }
   }
 }
 const app = new App();
