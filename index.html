@@ -9,7 +9,7 @@
   </head>
   <body class="m-0 w-screen h-screen">
     <div
-      class="w-1/4 h-5/6 absolute flex flex-col items-center top-1/2 left-8 transform -translate-y-1/2 bg-slate-800/85 z-10 px-2 pt-8 pb-2 rounded-2xl shadow-xl"
+      class="w-1/4 h-5/6 max-w-96 min-w-80 absolute flex flex-col items-center top-1/2 left-8 transform -translate-y-1/2 bg-slate-800/85 z-10 px-2 pt-8 pb-2 rounded-2xl shadow-xl"
     >
       <img src="./img/logo_globe.png" alt="logo" class="w-1/4 pb-6 m-0" />
       <ul class="trips w-full text-slate-200 p-2 overflow-auto">
@@ -68,7 +68,9 @@
               name="elevationGain"
             />
           </div>
-          <div class="form__fuel hidden pb-2 text-center flex justify-evenly">
+          <div
+            class="form__fuel hidden pb-2 text-center flex flex-col items-center"
+          >
             <label class="form__label">Fuel cost</label>
             <input
               class="form__input form__input--fuel-cost w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
@@ -77,7 +79,7 @@
             />
             <label class="form__label">Average fuel consumption</label>
             <input
-              class="form__input form__input--average-fuel-consumption w-1/6 bg-gray-500/50 rounded-md outline-none pl-2"
+              class="form__input form__input--average-fuel-consumption w-1/5 bg-gray-500/50 rounded-md outline-none pl-2"
               placeholder="liters"
               name="avgFuel"
             />
@@ -109,7 +111,49 @@
           </div>
         </form>
 
-        <!-- <li
+        <!-- <li id=${
+              this._id
+            } class="bg-gray-800/80 rounded-md p-2 border-l-4 border-green-500 mb-2">
+                <div class="flex flex-row">
+                    <div class="w-11/12">
+                        <div class="flex flex-row">
+                            <h2 class="pr-1">${this._data.name}</h2>
+                            <h3>on ${this._data.date}</h3>
+                        </div>
+                        <div class="flex flex-row justify-evenly">
+                            <div class="trip__details pr-3">
+                                <span class="trip__icon">👟</span>
+                                <span class="trip__value">${
+                                  this._data.distance
+                                }</span>
+                                <span class="trip__unit">steps</span>
+                            </div>
+                            <div class="workout__details">
+                                <span class="workout__icon">⏱</span>
+                                <span class="workout__value">${
+                                  this._data.duration
+                                }</span>
+                                <span class="workout__unit">min</span>
+                            </div>
+                            <div class="trip__details flex justify-center">
+                                <span class="trip__icon pr-1">⚡</span>
+                                <span class="trip__value pr-1">${this.calcPace()}</span>
+                                <span class="trip__unit">steps/min</span>
+                            </div>
+                        </div>
+                    </div>
+                    ${
+                      this._uploadWithImages
+                        ? `  <div class="w-1/12 items-center flex">
+                            <img src=${photos} alt="photos" class="photos_icon" />
+                        </div>
+                     `
+                        : ""
+                    }
+                </div>
+            </li>
+          
+          <li
           data-id="123"
           class="bg-gray-800/80 rounded-md p-2 border-l-4 border-amber-500 mb-2"
         >

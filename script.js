@@ -152,25 +152,25 @@ class App {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const generateListItem = ({ tripDetails, tripId }) => {
+      const generateListItem = ({ tripDetails, tripId }, uploadWithImages) => {
         switch (tripDetails.tripType) {
           case "flight":
-            flightTrip.render(tripDetails, tripId);
+            flightTrip.render(tripDetails, tripId, uploadWithImages);
             break;
           case "car":
-            carTrip.render(tripDetails, tripId);
+            carTrip.render(tripDetails, tripId, uploadWithImages);
             break;
           case "cycling":
-            cyclingTrip.render(tripDetails, tripId);
+            cyclingTrip.render(tripDetails, tripId, uploadWithImages);
             break;
           case "hike":
-            hikeTrip.render(tripDetails, tripId);
+            hikeTrip.render(tripDetails, tripId, uploadWithImages);
             break;
         }
       };
 
       const formData = new FormData(form);
-
+      //form with pictures added - photos upload needed
       if (formData.get("file").name !== "" && formData.get("file").size !== 0) {
         formData.delete("file");
 
@@ -187,10 +187,11 @@ class App {
             if (data.success === false) {
               return alert(data.message);
             }
-            console.log(data);
-            generateListItem(data);
+            const uploadWithImages = true;
+            generateListItem(data, uploadWithImages);
           });
       } else {
+        //form without images submitted
         const dataUpload = new URLSearchParams(formData);
         dataUpload.delete("file");
         fetch("http://localhost:3000/api/tripDetails", {
@@ -202,8 +203,8 @@ class App {
             if (data.success === false) {
               return alert(data.message);
             }
-            console.log(data);
-            generateListItem(data);
+            const uploadWithImages = false;
+            generateListItem(data, uploadWithImages);
           });
       }
 
@@ -215,18 +216,12 @@ class App {
     tripList.addEventListener("click", (e) => {
       if (e.target.matches(".photos_icon")) {
         const elementId = e.target.closest("li").id;
-        console.log("type", typeof elementId);
-        console.log("image clicked", elementId);
-        // this._openGallery();
 
         fetch(`http://localhost:3000/api/getPhotos/${elementId}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.success === true) {
-              console.log("1", data);
               const imageUrlArr = data.imageArr[0].url;
-              console.log("arr", imageUrlArr);
-
               this._openGallery(imageUrlArr);
             }
           });
