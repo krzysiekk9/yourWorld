@@ -53,9 +53,10 @@ class App {
   #map;
   #mapZoom = 10;
   #trips = [];
-  #markerIcon = L.icon({
-    iconUrl: "./img/location-pin.png",
-  });
+  // #markerIcon = L.icon({
+  //   iconUrl: "./img/location-pin.png",
+  //   //FIXME fix pin map and description
+  // });
   tripDetails = {
     name: "",
     coords: [],
@@ -69,10 +70,20 @@ class App {
     tripType: "",
   };
 
+  defaultIcon = new L.icon({
+    iconUrl: require("./node_modules/leaflet/dist/images/marker-icon.png"),
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    // popupAnchor: [0, -2],
+  });
   constructor() {
     this._loadMap();
     this._onFormSubmition();
     this._onImageClick();
+    //TODO generate list from db after opening app
+    //TODO count visited countries and display other map
+    //TODO add coorinates to each trip
+    //TODO phone look
   }
 
   _loadMap() {
@@ -109,9 +120,7 @@ class App {
   _onMapClick(e) {
     const { lat, lng } = e.latlng;
     this.tripDetails.coords = [lat, lng];
-    L.marker([lat, lng], {
-      icon: this.#markerIcon,
-    }).addTo(this.#map);
+    L.marker([lat, lng], { icon: this.defaultIcon }).addTo(this.#map);
     this._showForm();
     this._onTripTypeChange();
   }
