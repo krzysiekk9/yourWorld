@@ -132,6 +132,7 @@ class App {
     this.#newMarker = L.marker([lat, lng], { icon: this.defaultIcon }).addTo(
       this.#map
     );
+    console.log("maarker", this.#newMarker);
   }
   _addMarker(tripDetails) {
     this.#newMarker = L.marker([tripDetails.lat, tripDetails.lng], {
@@ -277,6 +278,23 @@ class App {
       const listEl = e.target.closest("li");
       if (listEl) {
         const elementId = e.target.closest("li").id;
+
+        //fetch to db to get specific trip lat and lng details
+        fetch(`http://localhost:3000/api/getCoords/${elementId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success === true) {
+              const { lat, lng } = data.coords[0];
+
+              //zoom into marker and add popup
+              this.#map.flyTo([lat, lng], 14, {
+                animate: true,
+                duration: 1.5,
+              });
+            }
+          });
+
+        //color selected trip
         //TODO finish
       }
       //if photos icon clicked open gallery
