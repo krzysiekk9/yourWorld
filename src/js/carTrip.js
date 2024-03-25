@@ -7,15 +7,15 @@ class Car extends Trip {
   calcCost() {
     if (
       this._data.distance === undefined ||
-      this._data.avgFuel === undefined ||
-      this._data.fuelCost === undefined
+      this._data.average_fuel_consumption === undefined ||
+      this._data.fuel_cost === undefined
     ) {
       return "-";
     }
     return (
       Math.round(
-        ((+this._data.distance * +this._data.avgFuel) / 100) *
-          this._data.fuelCost *
+        ((+this._data.distance * +this._data.average_fuel_consumption) / 100) *
+          this._data.fuel_cost *
           100
       ) / 100
     );
@@ -55,7 +55,7 @@ class Car extends Trip {
                     </div>
                   </div>
                   ${
-                    this._uploadWithImages
+                    this._data.with_images
                       ? `  <div class="w-1/12 items-center flex">
                           <img src=${photos} alt="photos" class="photos_icon" />
                       </div>

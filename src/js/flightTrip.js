@@ -6,18 +6,17 @@ class Flight extends Trip {
 
   _generateMarkup() {
     return `
-
             <li id=${
               this._id
-            } class="bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2">
-                <div class="flex flex-row">
+            } class=" bg-gray-800/80 rounded-md p-2 border-l-4 border-cyan-500 mb-2">
+                <div class="li-element flex flex-row">
                     <div class="w-11/12">
                         <div class="flex flex-row">
                             <h2 class='pr-1'>${this._data.name}</h2>
                             <h3>on ${this._data.date}</h3>
                         </div>
                         <div class="flex flex-row justify-evenly">
-                            <div class="trip__details pr-8">
+                            <div class="trip__details pr-4">
                                 <span class="trip__icon">✈️</span>
                                 <span class="trip__value">${
                                   this._data.distance
@@ -34,18 +33,18 @@ class Flight extends Trip {
                             <div class="trip__details">
                                 <span class="trip__icon">💰</span>
                                 <span class="trip__value">${
-                                  this._data.ticketCost
+                                  this._data.ticket_cost
                                 }</span>
                                 <span class="trip__unit">$</span>
                             </div>
                         </div>
                     </div>
                     ${
-                      this._uploadWithImages
+                      this._data.with_images
                         ? `  <div class="w-1/12 items-center flex">
                             <img src=${photos} alt="photos" class="photos_icon" />
                         </div>
-                     `
+                        `
                         : ""
                     }
                     

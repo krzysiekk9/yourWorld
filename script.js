@@ -53,10 +53,10 @@ class App {
   #map;
   #mapZoom = 10;
   #trips = [];
-  // #markerIcon = L.icon({
-  //   iconUrl: "./img/location-pin.png",
-  //   //FIXME fix pin map and description
-  // });
+  #lat;
+  #lng;
+  #newMarker;
+
   tripDetails = {
     name: "",
     coords: [],
@@ -74,15 +74,14 @@ class App {
     iconUrl: require("./node_modules/leaflet/dist/images/marker-icon.png"),
     iconSize: [25, 41],
     iconAnchor: [12, 41],
-    // popupAnchor: [0, -2],
+    popupAnchor: [0, -2],
   });
   constructor() {
     this._loadMap();
     this._onFormSubmition();
     this._onImageClick();
-    //TODO generate list from db after opening app
+    this._getSavedTrips();
     //TODO count visited countries and display other map
-    //TODO add coorinates to each trip
     //TODO phone look
   }
 
@@ -118,11 +117,38 @@ class App {
   }
 
   _onMapClick(e) {
+    //if there is already marker added but not saved remove it and add new one
+    if (this.#newMarker !== undefined) {
+      this.#map.removeLayer(this.#newMarker);
+    }
     const { lat, lng } = e.latlng;
-    this.tripDetails.coords = [lat, lng];
-    L.marker([lat, lng], { icon: this.defaultIcon }).addTo(this.#map);
+    this.#lat = lat;
+    this.#lng = lng;
+    this._addNewMarker(lat, lng);
     this._showForm();
     this._onTripTypeChange();
+  }
+  _addNewMarker(lat, lng) {
+    this.#newMarker = L.marker([lat, lng], { icon: this.defaultIcon }).addTo(
+      this.#map
+    );
+  }
+  _addMarker(tripDetails) {
+    this.#newMarker = L.marker([tripDetails.lat, tripDetails.lng], {
+      icon: this.defaultIcon,
+    })
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 100,
+          autoClose: false,
+          closeOnClick: false,
+          className: `${tripDetails.trip_type}-popup`,
+        })
+      )
+      .setPopupContent(`${tripDetails.name} on ${tripDetails.date}`)
+      .openPopup();
   }
 
   _onTripTypeChange() {
@@ -157,31 +183,35 @@ class App {
     formTicketCost.classList.add("hidden");
   }
 
+  _generateListItem(tripDetails, tripId) {
+    this._addMarker(tripDetails);
+    switch (tripDetails.trip_type) {
+      case "flight":
+        flightTrip.render(tripDetails, tripId);
+        break;
+      case "car":
+        carTrip.render(tripDetails, tripId);
+        break;
+      case "cycling":
+        cyclingTrip.render(tripDetails, tripId);
+        break;
+      case "hike":
+        hikeTrip.render(tripDetails, tripId);
+        break;
+    }
+  }
+
   _onFormSubmition() {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-
-      const generateListItem = ({ tripDetails, tripId }, uploadWithImages) => {
-        switch (tripDetails.tripType) {
-          case "flight":
-            flightTrip.render(tripDetails, tripId, uploadWithImages);
-            break;
-          case "car":
-            carTrip.render(tripDetails, tripId, uploadWithImages);
-            break;
-          case "cycling":
-            cyclingTrip.render(tripDetails, tripId, uploadWithImages);
-            break;
-          case "hike":
-            hikeTrip.render(tripDetails, tripId, uploadWithImages);
-            break;
-        }
-      };
 
       const formData = new FormData(form);
       //form with pictures added - photos upload needed
       if (formData.get("file").name !== "" && formData.get("file").size !== 0) {
         formData.delete("file");
+        formData.append("lat", this.#lat);
+        formData.append("lng", this.#lng);
+        formData.append("uploadWithImages", true);
 
         for (let i = 0; i < inputFiles.files.length; i++) {
           formData.append("files", inputFiles.files[i]);
@@ -196,13 +226,17 @@ class App {
             if (data.success === false) {
               return alert(data.message);
             }
-            const uploadWithImages = true;
-            generateListItem(data, uploadWithImages);
+            console.log("11", data);
+            this._generateListItem(data.tripDetails, data.tripDetails.trip_id);
           });
       } else {
         //form without images submitted
         const dataUpload = new URLSearchParams(formData);
         dataUpload.delete("file");
+        dataUpload.append("lat", this.#lat);
+        dataUpload.append("lng", this.#lng);
+        dataUpload.append("uploadWithImages", false);
+
         fetch("http://localhost:3000/api/tripDetails", {
           method: "post",
           body: dataUpload,
@@ -212,8 +246,8 @@ class App {
             if (data.success === false) {
               return alert(data.message);
             }
-            const uploadWithImages = false;
-            generateListItem(data, uploadWithImages);
+
+            this._generateListItem(data.tripDetails, data.tripDetails.trip_id);
           });
       }
 
@@ -221,8 +255,31 @@ class App {
     });
   }
 
+  _getSavedTrips() {
+    fetch("http://localhost:3000/api/getTrips")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success === true) {
+          // array => data.trips
+          data.trips.forEach((trip) => {
+            this._generateListItem(trip, trip.trip_id);
+          });
+        }
+        if (data.success === false) {
+          return alert(data.message);
+        }
+      });
+  }
+
   _onImageClick() {
     tripList.addEventListener("click", (e) => {
+      // if clicked on list element show popup and zoom into marker
+      const listEl = e.target.closest("li");
+      if (listEl) {
+        const elementId = e.target.closest("li").id;
+        //TODO finish
+      }
+      //if photos icon clicked open gallery
       if (e.target.matches(".photos_icon")) {
         const elementId = e.target.closest("li").id;
 

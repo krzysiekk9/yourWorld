@@ -44,11 +44,11 @@ class Cycling extends Trip {
                           <span class="trip__unit pr-2">km/min</span>
                       </div>
                       ${
-                        this._data.elevationGain
+                        this._data.elevation_gain
                           ? `
                       <div class="trip__details">
                           <span class="trip__icon">⛰️</span>
-                          <span class="trip__value pr-1">${this._data.elevationGain}</span>
+                          <span class="trip__value pr-1">${this._data.elevation_gain}</span>
                           <span class="trip__unit">m</span>
                       </div>
                       `
@@ -58,7 +58,7 @@ class Cycling extends Trip {
                 </div>
             </div>
             ${
-              this._uploadWithImages
+              this._data.with_images
                 ? `  <div class="w-1/12 items-center flex">
                     <img src=${photos} alt="photos" class="photos_icon" />
                 </div>

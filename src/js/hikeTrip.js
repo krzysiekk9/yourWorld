@@ -41,7 +41,7 @@ class Hike extends Trip {
                         </div>
                     </div>
                     ${
-                      this._uploadWithImages
+                      this._data.with_images
                         ? `  <div class="w-1/12 items-center flex">
                             <img src=${photos} alt="photos" class="photos_icon" />
                         </div>
