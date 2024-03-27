@@ -148,8 +148,8 @@ class App {
           className: `${tripDetails.trip_type}-popup`,
         })
       )
-      .setPopupContent(`${tripDetails.name} on ${tripDetails.date}`)
-      .openPopup();
+      .setPopupContent(`${tripDetails.name} on ${tripDetails.date}`);
+    // .openPopup();
   }
 
   _onTripTypeChange() {
@@ -218,7 +218,7 @@ class App {
           formData.append("files", inputFiles.files[i]);
         }
 
-        fetch("http://localhost:3000/api/photosUpload", {
+        fetch("http://localhost:3000/api/upload/withImages", {
           method: "post",
           body: formData,
         })
@@ -238,7 +238,7 @@ class App {
         dataUpload.append("lng", this.#lng);
         dataUpload.append("uploadWithImages", false);
 
-        fetch("http://localhost:3000/api/tripDetails", {
+        fetch("http://localhost:3000/api/upload/withoutImages", {
           method: "post",
           body: dataUpload,
         })
@@ -257,7 +257,7 @@ class App {
   }
 
   _getSavedTrips() {
-    fetch("http://localhost:3000/api/getTrips")
+    fetch("http://localhost:3000/api/getData/trips")
       .then((res) => res.json())
       .then((data) => {
         if (data.success === true) {
@@ -280,7 +280,7 @@ class App {
         const elementId = e.target.closest("li").id;
 
         //fetch to db to get specific trip lat and lng details
-        fetch(`http://localhost:3000/api/getCoords/${elementId}`)
+        fetch(`http://localhost:3000/api/getData/coords/${elementId}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.success === true) {
@@ -293,15 +293,12 @@ class App {
               });
             }
           });
-
-        //color selected trip
-        //TODO finish
       }
       //if photos icon clicked open gallery
       if (e.target.matches(".photos_icon")) {
         const elementId = e.target.closest("li").id;
 
-        fetch(`http://localhost:3000/api/getPhotos/${elementId}`)
+        fetch(`http://localhost:3000/api/getData/photos/${elementId}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.success === true) {
